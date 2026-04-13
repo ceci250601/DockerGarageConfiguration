@@ -1,0 +1,67 @@
+<!-- =============================================================================
+     edit_car.html - Pagina per modificare i dati di un'auto
+============================================================================= -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>Modifica Auto</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <h1>Modifica Auto</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flash-list">
+        {% for category, msg in messages %}
+          <li class="flash {{ category }}">{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" class="car-form card">
+    <div class="form-row">
+      <label for="brand">Brand</label>
+      <input id="brand" name="brand" value="{{ car.brand }}" required>
+    </div>
+
+    <div class="form-row">
+      <label for="model">Model</label>
+      <input id="model" name="model" value="{{ car.model }}" required>
+    </div>
+
+    <div class="form-row">
+      <label for="color">Color</label>
+      <div class="color-row">
+        <input id="color" name="color" type="color"
+               value="{{ car.color if car.color and car.color.startswith('#') else '#1976d2' }}"
+               class="color-input">
+        <span class="color-hex" id="color-hex">
+          {{ car.color if car.color else '#1976d2' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="disabled">Stato</label>
+      <select id="disabled" name="disabled">
+        <option value="false" {{ 'selected' if not car.disabled else '' }}>Abilitata</option>
+        <option value="true"  {{ 'selected' if car.disabled else '' }}>Disabilitata</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">
+        <i class="fa-solid fa-floppy-disk"></i> Salva modifiche
+      </button>
+      <a href="{{ url_for('select_cars') }}" class="btn-link">Annulla</a>
+    </div>
+  </form>
+
+  <p><a href="{{ url_for('select_cars') }}">← Torna a Selezione Auto</a></p>
+</body>
+</html>

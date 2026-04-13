@@ -1,0 +1,97 @@
+<!-- =============================================================================
+     select_cars.html - Pagina gestione auto: aggiunta, lista, modifica, rimozione
+============================================================================= -->
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <title>Seleziona Auto</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <h1>Selezione Auto</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flash-list">
+        {% for category, msg in messages %}
+          <li class="flash {{ category }}">{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" class="car-form card">
+    <div class="form-row">
+      <label for="brand">Brand</label>
+      <input id="brand" name="brand" placeholder="Es. Fiat" required>
+    </div>
+
+    <div class="form-row">
+      <label for="model">Model</label>
+      <input id="model" name="model" placeholder="Es. 500" required>
+    </div>
+
+    <div class="form-row">
+      <label for="color">Color</label>
+      <div class="color-row">
+        <input id="color" name="color" type="color" value="#1976d2" class="color-input">
+        <span class="color-hex" id="color-hex">#1976d2</span>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label for="disabled">Stato</label>
+      <select id="disabled" name="disabled">
+        <option value="false" selected>Abilitata</option>
+        <option value="true">Disabilitata</option>
+      </select>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn-primary">
+        <i class="fa-solid fa-plus"></i> Aggiungi Auto
+      </button>
+    </div>
+  </form>
+
+  <h2>Auto Correnti ({{ cars|length }})</h2>
+
+  {% if cars|length == 0 %}
+    <p>Nessuna auto presente.</p>
+  {% else %}
+    <div class="cars-list">
+      {% for car in cars %}
+        <div class="car-card">
+          <div class="car-left">
+            <span class="color-dot" style="background: {{ car.color }}"></span>
+          </div>
+          <div class="car-main">
+            <div class="car-title">
+              <strong>{{ car.brand }} {{ car.model }}</strong>
+            </div>
+            <div class="car-meta">
+              <span class="color-box" style="background: {{ car.color }}"></span>
+              <span class="badge {{ 'badge-green' if not car.disabled else 'badge-gray' }}">
+                {{ 'Abilitata' if not car.disabled else 'Disabilitata' }}
+              </span>
+            </div>
+          </div>
+          <div class="car-actions">
+            <a class="link" href="{{ url_for('edit_car', index=loop.index0) }}">
+              <i class="fa-solid fa-pen"></i> Modifica
+            </a>
+            <a class="link-danger" href="{{ url_for('remove_car', index=loop.index0) }}">
+              <i class="fa-solid fa-trash"></i> Rimuovi
+            </a>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <p><a href="{{ url_for('index') }}">← Torna alla home</a></p>
+</body>
+</html>

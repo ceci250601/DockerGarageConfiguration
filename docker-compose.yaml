@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  garageconfig:
+    build: .
+    container_name: garageconfig
+    volumes:
+      # Dataset principale → montato su /app
+      - /mnt/my_apps/DockerGarageConfiguration_project:/app
+      # Dataset dei JSON → montato su /app/data
+      - /mnt/my_apps/DockerGarageConfiguration_project/data:/app/data
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
